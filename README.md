@@ -4,5 +4,8 @@ I find myself consistenly needing to write the same basic functions over and ove
 # Convert
 This file contains several functions to perform unit conversion, metric to imperial, temperature, length, etc.
 
+# Helpers
+Various helper functions that I really don't know how to categorize.
+
 # Terminal
 Contains various functions and "constants" to make life easier when working in the terminal (things like printing the degree symbol)

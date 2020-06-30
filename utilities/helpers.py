@@ -25,6 +25,7 @@ def range_map(val, in_min, in_max, out_min, out_max, rnd=0):
 	else:
 		return round(range_val, rnd)
 
+
 # I don't remember where I found these functions, need to find the author...
 from math import ceil
 
@@ -33,6 +34,7 @@ def iter_chunk(size, _iter):
     _num_groups = range(int(ceil(len(_iter)/float(size))))
     
     return (_iter[n*size:(n+1)*size] for n in _num_groups)
+
 
 def public_properties(obj, key=None):
     """
@@ -45,13 +47,14 @@ def public_properties(obj, key=None):
 
     return props
 
+
 def public_properties_table(obj, key=None):
     """
     List an object's public properties in a 4-col table, optionally filtered by a `key` function
     """
-    _p = P(obj, key=key)
+    _p = public_properties(obj, key=key)
     
     if filter is not None:
         _max_w = max(len(p) for p in _p)
 
-    print('\n'.join(''.join(n.ljust(ceil((_max_w/4 + 2)*4)) for n in c) for c in chunk(4, P(obj))))
+    print('\n'.join(''.join(n.ljust(ceil((_max_w/4 + 2)*4)) for n in c) for c in iter_chunk(4, public_properties(obj))))

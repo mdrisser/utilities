@@ -1,7 +1,18 @@
+"""
+This file contains various conversion functions for use within Python programs.
+Conversions:
+Computer - various computer formats
+Temperature - Various temperature formats
+Length - metric to/from imperial
+"""
+
+
+#####
+## COMPUTER CONVERSIONS
 def bytes_to_human(bytes, suffix="B"):
     """
     Original Code:
-    Scale bytes to its proper format
+    Scale bytes to its proper, human readable format
     e.g:
         1253656 => '1.20MB'
         1253656678 => '1.17GB'
@@ -61,7 +72,7 @@ def k_to_f(degrees):
 ## LENGTH CONVERSIONS
 def mm_to_in(mm):
     """
-    Convert milimeters to inches
+    Convert millimeters to inches
     """
     return mm / 25.4
 
@@ -82,7 +93,7 @@ def m_to_f(meters):
 
 def in_to_mm(inches):
     """
-    Convert inches to milimeters
+    Convert inches to millimeters
     """
     return inches * 25.4
 

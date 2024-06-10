@@ -1,5 +1,5 @@
 # Python Utilities
-I find myself consistenly needing to write the same basic functions over and over again, converting between units, etc., so I created this python module to address that issue. This is an ongoing endevour, I'll be adding new files and functions as I deem necessary, so check back to see if there is anything new.
+These files are sets of Python functions desined to make my day-to-day life easier, hopefully you will find them useful too.
 
 # Net Helpers
 Various network helper functions that I find useful.

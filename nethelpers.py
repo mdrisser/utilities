@@ -7,9 +7,7 @@ def ipgeo_lookup(domain, ip, apiKey):
     :return: None
     """
     
-    print()
-    print("Getting IP Geolocation...")
-    print()
+    #print("Getting IP Geolocation...")
     import requests
     
     IPGEO_API_URL = "https://api.ipgeolocation.io/ipgeo"
@@ -25,34 +23,21 @@ def ipgeo_lookup(domain, ip, apiKey):
 
     # Get the JSON object returned by the request
     answer = geo_ip.json()
+    answer['domain'] = domain
 
     # Show the information we want to see
-    print(f"          Domain: {domain}")
-    print(f"              IP: {answer['ip']}")
-    print(f"    Country Code: {answer['country_code2']}")
-    print(f"         Country: {answer['country_name']}")
+    #print(f"          Domain: {domain}")
+    #print(f"              IP: {answer['ip']}")
+    #print(f"    Country Code: {answer['country_code2']}")
+    #print(f"         Country: {answer['country_name']}")
+    info = {
+        'domain': domain,
+        'ip': answer['ip'],
+        'country_code': answer['country_code2'],
+        'country': answer['country_name'],
+    }
 
-
-def auth0_lookup(ip):
-    """
-    DEPRECATED! Service is being shutdown by Auth0
-    
-    Queries Auth0 to determine any blacklists that the IP in question may be on, prints
-    the results to the console.
-    :return: None
-    """
-    auth0_headers = {"X-Auth-Token": AUTH0_API_KEY}
-    geo_ip = requests.get(AUTH0_API_URL + ip, headers=auth0_headers)
-
-    # Get the JSON object returned by the request
-    full_ip = geo_ip.json()
-
-    print(f"Domain Blacklist: {full_ip['fullip']['baddomain']['domain']['blacklist']}")
-    print(f"    MX Blacklist: {full_ip['fullip']['baddomain']['domain']['blacklist']}")
-    print(f"    NS Blacklist: {full_ip['fullip']['baddomain']['domain']['blacklist']}")
-    print(f"    Domain Score: {full_ip['fullip']['baddomain']['domain']['score']}")
-    print(f"    IP Blacklist: {full_ip['fullip']['baddomain']['ip']['blacklist']}")
-    print(f"        IP Score: {full_ip['fullip']['baddomain']['ip']['blacklist']}")
+    return info
 
 
 def check_blocklist(ip):
@@ -62,10 +47,6 @@ def check_blocklist(ip):
     :param ip: IP Address to search the blacklist for
     :return: list containing blacklist name and number of times reported
     """
-    
-    print()
-    print("Checking blocklist...")
-
     import requests
     import json
     # Check returns JSON in the format of:
@@ -74,14 +55,13 @@ def check_blocklist(ip):
     blde_params = {'ip': ip, 'start': 1, 'format': 'json'}
     r = requests.get(blde_url, params=blde_params)
 
-    #print(r.text)
     returned = json.loads(r.text)
 
     result = {
         'blacklist': 'blocklist.de',
         'reports': returned['reports']
     }
-    #print(result)
+    
     return result
 
 def check_stopforumspam(ip):
@@ -92,17 +72,13 @@ def check_stopforumspam(ip):
     """
     import requests
     import untangle
-    # Check teturns XML in the format of:
+    # Check returns XML in the format of:
     # <response success="true">
     #     <type>ip</type>
     #     <appears>yes</appears>
     #     <lastseen>2007-09-18 05:48:53</lastseen>
     #     <frequency>2</frequency>
     # </response>
-
-    print()
-    print("Checking StopForumSpam.com...")
-
     sfs_url = "http://api.stopforumspam.org/api"
     sfs_params = {'ip': ip}
 
@@ -113,7 +89,7 @@ def check_stopforumspam(ip):
         'blacklist': 'Stop Forum Spam',
         'reports': xmldom.response.frequency.cdata
     }
-    #print(result)
+    
     return result
 
 
@@ -157,10 +133,6 @@ def check_abuseipdb(ip, apiKey):
     #         ]
     #     }
     # }
-
-    print()
-    print("Checking AbuseIPDB...")
-
     aipdb_url = "https://api.abuseipdb.com/api/v2/check"
     aipdb_params = {'ipAddress': ip}
     aipdb_headers = {
@@ -170,8 +142,6 @@ def check_abuseipdb(ip, apiKey):
 
     r = requests.get(aipdb_url, params=aipdb_params, headers=aipdb_headers)
 
-    #print(r.text)
-
     returned = json.loads(r.text)
 
     result = {
@@ -179,7 +149,6 @@ def check_abuseipdb(ip, apiKey):
         'reports': returned['data']['totalReports']
     }
 
-    #print(result)
     return result
 
 
@@ -189,16 +158,9 @@ def blacklist_check(ip, abuseipdb_apikey):
     :param ip: IP Address to search the blacklists for
     :return: list of sites and number of times reported to each site
     """
-
-    print()
-    print(f"Checking blacklists for {ip}.")
-
     blacklist_results = []
     blacklist_results.append(check_blocklist(ip))
     blacklist_results.append(check_stopforumspam(ip))
     blacklist_results.append(check_abuseipdb(ip, abuseipdb_apikey))
 
-    print()
-    print("Finished checking blacklists.")
-    print()
     return blacklist_results
